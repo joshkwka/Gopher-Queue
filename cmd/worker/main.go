@@ -16,6 +16,11 @@ func main() {
 	if serverAddr == "" {
 		serverAddr = "localhost:50051"
 	}
+	podName := os.Getenv("POD_NAME")
+	if podName == "" {
+		podName = "local-worker"
+	}
+	log.Printf("Worker %s starting up...", podName)
 	
 	conn, err := grpc.NewClient(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -30,7 +35,7 @@ func main() {
 	for {
 		// Create fresh context for each task
 		pollCtx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-		res, err := client.GetWork(pollCtx, &pb.WorkRequest{WorkerId: 99})
+		res, err := client.GetWork(pollCtx, &pb.WorkRequest{WorkerId: podName})
 		cancel() 
 
 		if err != nil {
@@ -57,7 +62,7 @@ func main() {
 			
 			err := stream.Send(&pb.WorkerUpdate{
 				TaskId:       res.TaskId, 
-				WorkerId:     99,
+				WorkerId:     podName,
 				PercComplete: perc,
 				CurrState:    pb.TaskState_RUNNING,
 			})

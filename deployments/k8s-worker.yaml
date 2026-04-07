@@ -19,3 +19,7 @@ spec:
         env:
         - name: CONTROL_PLANE_URL
           value: "gopher-control:50051"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name

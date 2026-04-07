@@ -59,7 +59,7 @@ func (s *server) SubmitTask(ctx context.Context, req *pb.TaskRequest) (*pb.TaskR
 }
 
 func (s *server) GetWork(ctx context.Context, req *pb.WorkRequest) (*pb.WorkResponse, error) {
-    log.Printf("Worker %d requesting work", req.WorkerId)
+    log.Printf("Worker %s requesting work", req.WorkerId)
 
 	getWorkQuery := `
 		UPDATE tasks 
@@ -82,7 +82,7 @@ func (s *server) GetWork(ctx context.Context, req *pb.WorkRequest) (*pb.WorkResp
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Printf("No work available for Worker %d", req.WorkerId)
+			log.Printf("No work available for Worker %s", req.WorkerId)
 			// Not found error
 			return nil, status.Errorf(codes.NotFound, "no pending tasks in queue")
 		}
@@ -91,7 +91,7 @@ func (s *server) GetWork(ctx context.Context, req *pb.WorkRequest) (*pb.WorkResp
 		return nil, status.Errorf(codes.Internal, "failed to fetch work from memory bank")
 	}
 
-	log.Printf("Assigned Task ID %d to Worker %d", taskId, req.WorkerId)
+	log.Printf("Assigned Task ID %d to Worker %s", taskId, req.WorkerId)
 
 	// Return the raw values, not pointers
 	return &pb.WorkResponse{TaskId: taskId, Payload: payload}, nil

@@ -190,7 +190,7 @@ func (x *TaskResponse) GetAccepted() bool {
 // GetWork
 type WorkRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	WorkerId      int32                  `protobuf:"varint,1,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
+	WorkerId      string                 `protobuf:"bytes,1,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -225,11 +225,11 @@ func (*WorkRequest) Descriptor() ([]byte, []int) {
 	return file_api_proto_v1_task_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *WorkRequest) GetWorkerId() int32 {
+func (x *WorkRequest) GetWorkerId() string {
 	if x != nil {
 		return x.WorkerId
 	}
-	return 0
+	return ""
 }
 
 type WorkResponse struct {
@@ -287,7 +287,7 @@ func (x *WorkResponse) GetPayload() []byte {
 type WorkerUpdate struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TaskId        int32                  `protobuf:"varint,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	WorkerId      int32                  `protobuf:"varint,2,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
+	WorkerId      string                 `protobuf:"bytes,2,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
 	PercComplete  float32                `protobuf:"fixed32,3,opt,name=perc_complete,json=percComplete,proto3" json:"perc_complete,omitempty"`
 	CurrState     TaskState              `protobuf:"varint,4,opt,name=curr_state,json=currState,proto3,enum=queue_service.TaskState" json:"curr_state,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -331,11 +331,11 @@ func (x *WorkerUpdate) GetTaskId() int32 {
 	return 0
 }
 
-func (x *WorkerUpdate) GetWorkerId() int32 {
+func (x *WorkerUpdate) GetWorkerId() string {
 	if x != nil {
 		return x.WorkerId
 	}
-	return 0
+	return ""
 }
 
 func (x *WorkerUpdate) GetPercComplete() float32 {
@@ -409,13 +409,13 @@ const file_api_proto_v1_task_proto_rawDesc = "" +
 	"\atask_id\x18\x01 \x01(\x05R\x06taskId\x12\x1a\n" +
 	"\baccepted\x18\x02 \x01(\bR\baccepted\"*\n" +
 	"\vWorkRequest\x12\x1b\n" +
-	"\tworker_id\x18\x01 \x01(\x05R\bworkerId\"A\n" +
+	"\tworker_id\x18\x01 \x01(\tR\bworkerId\"A\n" +
 	"\fWorkResponse\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\x05R\x06taskId\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\fR\apayload\"\xa2\x01\n" +
 	"\fWorkerUpdate\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\x05R\x06taskId\x12\x1b\n" +
-	"\tworker_id\x18\x02 \x01(\x05R\bworkerId\x12#\n" +
+	"\tworker_id\x18\x02 \x01(\tR\bworkerId\x12#\n" +
 	"\rperc_complete\x18\x03 \x01(\x02R\fpercComplete\x127\n" +
 	"\n" +
 	"curr_state\x18\x04 \x01(\x0e2\x18.queue_service.TaskStateR\tcurrState\"&\n" +
