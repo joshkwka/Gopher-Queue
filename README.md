@@ -10,8 +10,7 @@ The system is designed around a decoupled Producer-Consumer model, utilizing gRP
 * **Workers:** Stateless, containerized Go binaries that pull tasks, execute workload logic, and report status via gRPC streams.
 * **Persistence Layer:** A normalized relational schema in PostgreSQL to ensure task data survives Control Plane restarts.
 
-```
-mermaid
+```mermaid
 graph TD
     Client[CLI Producer <br/> Go Client] -->|gRPC / port-forward| CP(Control Plane <br/> K8s Service)
     
@@ -26,8 +25,7 @@ graph TD
     end
 ```
 
-```
-sequenceDiagram
+```sequenceDiagram
     participant CLI as Producer (CLI)
     participant CP as Control Plane
     participant DB as PostgreSQL
