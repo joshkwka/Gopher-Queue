@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gopher-worker
+spec:
+  replicas: 3  # 3 workers at once.
+  selector:
+    matchLabels:
+      app: gopher-worker
+  template:
+    metadata:
+      labels:
+        app: gopher-worker
+    spec:
+      containers:
+      - name: worker
+        image: gopher-worker:v1
+        imagePullPolicy: Never
+        env:
+        - name: CONTROL_PLANE_URL
+          value: "gopher-control:50051"

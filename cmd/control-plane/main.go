@@ -6,6 +6,7 @@ import (
     "log"
     "net"
 	"io"
+	"os"
 	
 	"database/sql"
     _ "github.com/lib/pq"
@@ -136,7 +137,14 @@ func main() {
     }
 
 	// 2. Connect to Database
-	connectionString := "postgres://gopher:secret@localhost:5432/gopherqueue?sslmode=disable"
+	connectionString := os.Getenv("DATABASE_URL")
+	if connectionString == "" {
+        connectionString = "postgres://gopher:secret@localhost:5432/gopherqueue?sslmode=disable"
+        log.Println("Using local database connection string")
+    } else {
+        log.Println("Using database connection string from environment")
+    }
+
 	conn, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatalf("failed to open DB: %v", err)
