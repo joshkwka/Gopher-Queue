@@ -10,6 +10,50 @@ The system is designed around a decoupled Producer-Consumer model, utilizing gRP
 * **Workers:** Stateless, containerized Go binaries that pull tasks, execute workload logic, and report status via gRPC streams.
 * **Persistence Layer:** A normalized relational schema in PostgreSQL to ensure task data survives Control Plane restarts.
 
+```
+mermaid
+graph TD
+    Client[CLI Producer <br/> Go Client] -->|gRPC / port-forward| CP(Control Plane <br/> K8s Service)
+    
+    subgraph Kubernetes Cluster [Local Minikube Cluster]
+        CP -->|Reads/Writes State| DB[(PostgreSQL <br/> Memory Bank)]
+        
+        Worker1[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
+        Worker2[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
+        Worker3[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
+        
+        Worker1 ==>|2. Bi-directional Stream <br/> Progress Updates| CP
+    end
+```
+
+```
+sequenceDiagram
+    participant CLI as Producer (CLI)
+    participant CP as Control Plane
+    participant DB as PostgreSQL
+    participant W as Worker (Daemon)
+
+    CLI->>CP: SubmitTask(Type, Priority, Payload)
+    CP->>DB: INSERT INTO tasks (STATE: PENDING)
+    DB-->>CP: Task ID: 42
+    CP-->>CLI: Receipt: Task 42 Accepted
+    
+    loop Every 5 Seconds
+        W->>CP: GetWork(WorkerID)
+    end
+    
+    CP->>DB: SELECT * FROM tasks WHERE STATE=PENDING
+    DB-->>CP: Task 42
+    CP->>DB: UPDATE tasks SET STATE=RUNNING
+    CP-->>W: Assign Task 42
+    
+    loop Work Simulation
+        W->>CP: ReportStatus() Stream [20%, 40%...]
+    end
+    W->>CP: ReportStatus() Stream [100% COMPLETED]
+    CP->>DB: UPDATE tasks SET STATE=COMPLETED
+```
+
 ## The Stack
 * **Language:** Golang.
 * **Communication:** gRPC and Protocol Buffers for inter-service communication.
