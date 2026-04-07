@@ -10,23 +10,6 @@ The system is designed around a decoupled Producer-Consumer model, utilizing gRP
 * **Workers:** Stateless, containerized Go binaries that pull tasks, execute workload logic, and report status via gRPC streams.
 * **Persistence Layer:** A normalized relational schema in PostgreSQL to ensure task data survives Control Plane restarts.
 
-<!-- 
-```mermaid
-graph TD
-    Client[CLI Producer <br/> Go Client] -->|gRPC / port-forward| CP(Control Plane <br/> K8s Service)
-    
-    subgraph Kubernetes Cluster [Local Minikube Cluster]
-        CP -->|Reads/Writes State| DB[(PostgreSQL <br/> Memory Bank)]
-        
-        Worker1[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
-        Worker2[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
-        Worker3[Worker Pod <br/> Downward API] -.->|1. Polls for Work| CP
-        
-        Worker1 ==>|2. Bi-directional Stream <br/> Progress Updates| CP
-    end
-```
--->
-
 ## The Stack
 * **Language:** Golang.
 * **Communication:** gRPC and Protocol Buffers for inter-service communication.
