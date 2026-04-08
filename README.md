@@ -10,6 +10,8 @@ The system is designed around a decoupled Producer-Consumer model, utilizing gRP
 * **Workers:** Stateless, containerized Go binaries that pull tasks, execute workload logic, and report status via gRPC streams.
 * **Persistence Layer:** A normalized relational schema in PostgreSQL to ensure task data survives Control Plane restarts.
 
+![gopher-queue-architecture](./media/gopher-queue.png)
+
 ## The Stack
 * **Language:** Golang.
 * **Communication:** gRPC and Protocol Buffers for inter-service communication.
